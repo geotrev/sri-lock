@@ -1,6 +1,6 @@
 # SRI Lock
 
-A CLI tool to help manage your CDN link tags in things like README and HTML files.
+A CLI tool to help manage your CDN link tags in any file.
 
 It only works with Node 14, but will support 10+ in the future.
 
