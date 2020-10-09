@@ -1,8 +1,22 @@
 {
+  "helper": {
+    "path": "test",
+    "peer": true,
+    "version": "0.2.0",
+    "resources": [
+      {
+        "file": "helper.js",
+        "sri": "sha256-KiieWXwXUl+gmE53PcbEQvl6XG6hgdsji+EXLIpROl0="
+      }
+    ],
+    "targets": [
+      "test/doc.md"
+    ]
+  },
   "upgraded-element": {
-    "root": "node_modules/upgraded-element",
     "version": "0.4.3",
     "peer": true,
+    "module": true,
     "resources": [
       {
         "file": "dist/upgraded-element.js",
@@ -14,13 +28,12 @@
       }
     ],
     "targets": [
-      "public/index.html",
-      "README.md"
+      "test/upgraded-element/doc.md"
     ]
   },
   "@spider-ui/tooltip": {
-    "root": "node_modules/@spider-ui/tooltip",
     "version": "0.2.5",
+    "module": true,
     "resources": [
       {
         "file": "dist/tooltip.js",
@@ -32,8 +45,7 @@
       }
     ],
     "targets": [
-      "public/index.html",
-      "README.md"
+      "test/tooltip/doc.md"
     ]
   }
 }

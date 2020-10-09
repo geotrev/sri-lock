@@ -5,7 +5,7 @@ import { canUpdate } from "./can-update.js"
 import * as logger from "./logger.js"
 
 let args = process.argv
-let config = "sri-lock.json"
+let config = "paopu.config.json"
 
 args.forEach((arg) => {
   const getVal = (parts) => parts[parts.length - 1]
@@ -22,14 +22,19 @@ const getSHA = (data) => SHA256.b64(data)
 const nextDataState = {}
 
 for (let name in metadata) {
-  const { root, version: prevVersion, resources: prevResources } = metadata[
-    name
-  ]
+  const {
+    path: rootPath,
+    version: prevVersion,
+    resources: prevResources,
+    module = false,
+  } = metadata[name]
+
+  const root = module ? "node_modules/" + name : rootPath
 
   logger.step(`Updating resource SRIs: ${name}`)
 
   // If we can't update, return the existing data and move on
-  if (!canUpdate(name, root, prevResources)) {
+  if (!canUpdate(name, rootPath, module, prevResources)) {
     nextDataState[name] = metadata[name]
     continue
   }

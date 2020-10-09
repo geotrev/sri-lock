@@ -1,0 +1,14 @@
+```html
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.0/dist/upgraded-element.min.js"
+  integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/helper@0.1.0/dist/helper.js"
+  integrity="sha256-4eCeGYBbcfBB/bLzVuDg8NFDE53W1Do+J7TWsGStx2M="
+  crossorigin="anonymous"
+></script>
+```

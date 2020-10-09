@@ -1,12 +1,12 @@
 import * as logger from "./logger.js"
 
-export const canUpdate = (name, root, resources) => {
+export const canUpdate = (name, rootPath, module, resources) => {
   let canUpdate = true
 
   /* eslint-disable no-console */
-  if (!root) {
+  if (!rootPath && !module) {
     logger.print(
-      `--> CDN resource ${name} missing key: 'root', skipping.`,
+      `--> Neither 'module: true' nor 'path' options given, skipping.`,
       "warn"
     )
     canUpdate = false
