@@ -12,6 +12,12 @@ export const canUpdate = (name, rootPath, module, resources) => {
     canUpdate = false
   }
 
+  if (rootPath && module) {
+    logger.print(
+      `--> Both 'module' and 'path' options were given (you can only specify one!), skipping.`
+    )
+  }
+
   if (!Array.isArray(resources) || !resources.length) {
     canUpdate = false
   }

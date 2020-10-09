@@ -7,6 +7,9 @@
   "bin": {
     "sri-lock": "bin/index.js"
   },
+  "dependencies": {
+    "jshashes": "^1.0.8"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@spider-ui/global-event-registry": "^0.2.5",
@@ -15,7 +18,6 @@
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^24.0.2",
-    "jshashes": "^1.0.8",
     "prettier": "^2.0.5",
     "rollup": "^2.26.4",
     "upgraded-element": "^0.4.3"

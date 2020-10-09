@@ -5,7 +5,7 @@ import { canUpdate } from "./can-update.js"
 import * as logger from "./logger.js"
 
 let args = process.argv
-let config = "paopu.config.json"
+let configFile = "paopu.config.json"
 
 args.forEach((arg) => {
   const getVal = (parts) => parts[parts.length - 1]
@@ -16,7 +16,7 @@ args.forEach((arg) => {
 
 logger.begin("Building Metadata")
 
-const metadata = getJSON(config)
+const metadata = getJSON(configFile)
 const SHA256 = new Hashes.SHA256()
 const getSHA = (data) => SHA256.b64(data)
 const nextDataState = {}
@@ -100,5 +100,5 @@ for (let name in metadata) {
 }
 
 const payload = JSON.stringify(nextDataState, null, 2)
-writeFileContent(config, payload)
+writeFileContent(configFile, payload)
 logger.finish()
