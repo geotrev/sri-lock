@@ -1,0 +1,39 @@
+{
+  "upgraded-element": {
+    "root": "node_modules/upgraded-element",
+    "version": "0.4.3",
+    "peer": true,
+    "resources": [
+      {
+        "file": "dist/upgraded-element.js",
+        "sri": "sha256-5fo/feskDBlZqMTUy8UbxR16Q/rUY3dcF7sYFmjoQxE="
+      },
+      {
+        "file": "dist/upgraded-element.min.js",
+        "sri": "sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
+      }
+    ],
+    "targets": [
+      "public/index.html",
+      "README.md"
+    ]
+  },
+  "@spider-ui/tooltip": {
+    "root": "node_modules/@spider-ui/tooltip",
+    "version": "0.2.5",
+    "resources": [
+      {
+        "file": "dist/tooltip.js",
+        "sri": "sha256-6LMYmsLKQxTccPLpT72MpHf9yXsmYmE1MZjd0PaiDBI="
+      },
+      {
+        "file": "dist/tooltip.min.js",
+        "sri": "sha256-4eCeGYBbcfBB/bLzVuDg8NFDE53W1Do+J7TWsGStx2M="
+      }
+    ],
+    "targets": [
+      "public/index.html",
+      "README.md"
+    ]
+  }
+}

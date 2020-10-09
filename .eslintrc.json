@@ -1,0 +1,23 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "extends": ["eslint:recommended", "prettier", "prettier/babel"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js"],
+        "paths": ["src/"],
+        "moduleDirectory": ["node_modules/"]
+      }
+    }
+  },
+  "rules": {
+    "no-console": 2
+  }
+}
