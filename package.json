@@ -1,11 +1,11 @@
 {
-  "name": "sri-lock",
+  "name": "paopu",
   "version": "0.0.1",
   "description": "",
   "main": "bin/index.js",
   "type": "module",
   "bin": {
-    "sri-lock": "bin/index.js"
+    "paopu": "bin/index.js"
   },
   "dependencies": {
     "jshashes": "^1.0.8"
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/sri-lock.git"
+    "url": "git+https://github.com/geotrev/paopu.git"
   },
   "keywords": [
     "script",
@@ -46,7 +46,7 @@
   "author": "George Treviranus <hellO@geotrev.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/sri-lock/issues"
+    "url": "https://github.com/geotrev/paopu/issues"
   },
-  "homepage": "https://github.com/geotrev/sri-lock#readme"
+  "homepage": "https://github.com/geotrev/paopu#readme"
 }

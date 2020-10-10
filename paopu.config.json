@@ -2,50 +2,18 @@
   "helper": {
     "path": "test",
     "peer": true,
-    "version": "0.2.0",
-    "resources": [
-      {
-        "file": "helper.js",
-        "sri": "sha256-KiieWXwXUl+gmE53PcbEQvl6XG6hgdsji+EXLIpROl0="
-      }
-    ],
-    "targets": [
-      "test/doc.md"
-    ]
+    "resources": ["helper.js"],
+    "targets": ["test/doc.md"]
   },
   "upgraded-element": {
-    "version": "0.4.3",
     "peer": true,
     "module": true,
-    "resources": [
-      {
-        "file": "dist/upgraded-element.js",
-        "sri": "sha256-5fo/feskDBlZqMTUy8UbxR16Q/rUY3dcF7sYFmjoQxE="
-      },
-      {
-        "file": "dist/upgraded-element.min.js",
-        "sri": "sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
-      }
-    ],
-    "targets": [
-      "test/upgraded-element/doc.md"
-    ]
+    "resources": ["dist/upgraded-element.js", "dist/upgraded-element.min.js"],
+    "targets": ["test/upgraded-element/doc.md"]
   },
   "@spider-ui/tooltip": {
-    "version": "0.2.5",
     "module": true,
-    "resources": [
-      {
-        "file": "dist/tooltip.js",
-        "sri": "sha256-6LMYmsLKQxTccPLpT72MpHf9yXsmYmE1MZjd0PaiDBI="
-      },
-      {
-        "file": "dist/tooltip.min.js",
-        "sri": "sha256-4eCeGYBbcfBB/bLzVuDg8NFDE53W1Do+J7TWsGStx2M="
-      }
-    ],
-    "targets": [
-      "test/tooltip/doc.md"
-    ]
+    "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
+    "targets": ["test/tooltip/doc.md"]
   }
 }
