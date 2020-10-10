@@ -6,7 +6,7 @@ Read the [Why](#why) section for more details.
 
 Paopu currently only works with Node 14, but will support 10+ in the future.
 
-## Install
+## Install & Run
 
 1. Install it in your project.
 
@@ -21,7 +21,7 @@ $ npm i -D paopu
 $ paopu
 ```
 
-Paopu creates a `.paopu-cache` file to track things like version numbers and sub-resource integrity hashes for packages defined in your paopu config. You can add it to your `.gitignore` if you prefer.
+Paopu creates a `.paopu-cache` file to track version numbers and sub-resource integrity hashes for packages defined in your paopu config. You this file to your `.gitignore` if you prefer.
 
 ## Why?
 

@@ -7,6 +7,9 @@
   "bin": {
     "paopu": "bin/index.js"
   },
+  "scripts": {
+    "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore"
+  },
   "dependencies": {
     "jshashes": "^1.0.8"
   },
