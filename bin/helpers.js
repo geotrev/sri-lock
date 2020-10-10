@@ -26,21 +26,20 @@ export const writeFileContent = (target, content) => {
 export const exists = (target) =>
   fs.existsSync(path.resolve(process.cwd(), target)) !== false
 
-export const canUpdate = (rootPath, module, resources) => {
+export const canUpdate = (name, rootPath, module, resources) => {
   let canUpdate = true
 
   /* eslint-disable no-console */
   if (!rootPath && !module) {
-    logger.print(
-      `--> Neither 'module: true' nor 'path' options given, skipping.`,
-      "warn"
+    logger.err(
+      `Package '${name}' must have one of 'module' or 'path' options, skipping.`
     )
     canUpdate = false
   }
 
   if (rootPath && module) {
-    logger.print(
-      `--> Both 'module' and 'path' options were given (you can only specify one!), skipping.`
+    logger.err(
+      `Package '${name}' can only have one of 'module' or 'path' options, skipping.`
     )
     canUpdate = false
   }

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import path from "path"
 import Hashes from "jshashes"
 import {
@@ -45,8 +47,7 @@ for (let name in paopuConfig) {
 
   const root = module ? "node_modules/" + name : resourceRoot
 
-  // If we can't update, return the existing data and move on
-  if (!canUpdate(resourceRoot, module, resources)) {
+  if (!canUpdate(name, resourceRoot, module, resources)) {
     continue
   }
 
@@ -54,7 +55,7 @@ for (let name in paopuConfig) {
 
   const pkgPath = `${root}/package.json`
   if (!exists(pkgPath)) {
-    logger.print(`Package '${name}' has unresolvable package.json, skipping.`)
+    logger.err(`Package '${name}' has unresolvable package.json, skipping.`)
     continue
   }
 
@@ -74,8 +75,8 @@ for (let name in paopuConfig) {
     const resourcePath = path.resolve(process.cwd(), root, resource)
 
     if (!exists(resourcePath)) {
-      logger.print(`Resource '${resource}' is unresolvable, skipping.`)
-      logger.print(`- Tried path: ${resourcePath}`)
+      logger.err(`Resource '${resource}' is unresolvable, skipping.`)
+      logger.err(`- Tried path: ${resourcePath}`)
       continue
     }
 

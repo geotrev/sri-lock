@@ -1,14 +1,31 @@
 # Paopu
 
-A CLI tool to manage your CDN script tags in files. It generates SHA hashes, bumps your CDN resource versions, and more. Just tell it the files containing your script tags in the config and let it work.
+A CLI tool to manage your CDN script tags in files. It automatically handles SHA/SRI hash checking and resource versions for you.
 
-This tool assumes you're working with node modules or in general have a `package.json`.
+Read the [Why](#why) section for more details.
 
 Paopu currently only works with Node 14, but will support 10+ in the future.
 
+## Install
+
+1. Install it in your project.
+
+```sh
+$ npm i -D paopu
+```
+
+2. [Create a configuration.](#create-a-config)
+3. Run it.
+
+```sh
+$ paopu
+```
+
+Paopu creates a `.paopu-cache` file to track things like version numbers and sub-resource integrity hashes for packages defined in your paopu config. You can add it to your `.gitignore` if you prefer.
+
 ## Why?
 
-**Scenario:** Let's say you want to tell folks that your npm package's bundle can be accessed via `jsdelivr` (any cdn will do, though). You might include an example script in your README, like so:
+**Scenario:** Let's say you want to tell the world that your npm package's bundle can be accessed via `jsdelivr` (any cdn will do, though). You might include an example script in your README, like so:
 
 ```html
 <!-- Some README or html file -->
@@ -30,12 +47,6 @@ Kind of annoying right?
 
 **Solution:** Install Paopu, add a config that describes the above setup, then run the CLI tool. Done. 💪✨
 
-## Install
-
-```sh
-$ npm i -D paopu
-```
-
 ## Create a config
 
 First, create the file:
@@ -53,10 +64,7 @@ Using the example in the [Why?](#why) section, here's what that script tag's con
   "react": {
     "module": true,
     "version": "16.13.1",
-    "resources": [
-      { "file": "umd/react.production.min.js" },
-      { "file": "umd/react.development.js" }
-    ],
+    "resources": ["umd/react.production.min.js", "umd/react.development.js"],
     "targets": ["README.md", "test/index.html"]
   }
 }
@@ -71,10 +79,7 @@ But wait, there's more. You can also configure a resource to be searched locally
   "react": {
     "path": "packages/react",
     "version": "16.13.1",
-    "resources": [
-      { "file": "umd/react.production.min.js" },
-      { "file": "umd/react.development.js" }
-    ],
+    "resources": ["umd/react.production.min.js", "umd/react.development.js"],
     "targets": ["README.md", "test/index.html"]
   }
 }
@@ -91,10 +96,7 @@ Alright, that's pretty cool. But what about peer dependencies? That is, maybe yo
   "react": {
     "path": "packages/react",
     "version": "16.13.1",
-    "resources": [
-      { "file": "umd/react.production.min.js" },
-      { "file": "umd/react.development.js" }
-    ],
+    "resources": ["umd/react.production.min.js", "umd/react.development.js"],
     "targets": ["README.md", "test/index.html"]
   },
   "react-dom": {
@@ -102,8 +104,8 @@ Alright, that's pretty cool. But what about peer dependencies? That is, maybe yo
     "peer": true,
     "version": "16.13.1",
     "resources": [
-      { "file": "umd/react-dom.production.min.js" },
-      { "file": "umd/react-dom.development.js" }
+      "umd/react-dom.production.min.js",
+      "umd/react-dom.development.js"
     ],
     "targets": ["README.md", "test/index.html"]
   }
@@ -153,9 +155,9 @@ Specifies if the resource needs to be updated in another resource's target files
 
 #### "resources"
 
-Type: `Array.<{"file": string, "sri": string}>`
+Type: `Array.<string>`
 
-An array of file paths. Each will have a SHA derived from it, and later appended with the key `sri`.
+An array of file paths. Each will have a SHA derived from it.
 
 #### "targets"
 
