@@ -4,9 +4,10 @@ import path from "path"
 import fs from "fs"
 import * as logger from "./logger.js"
 
-export const CONFIG_FILE_NAME = "paopu.config.json"
+const CONFIG_FILE_NAME = "paopu.config.json"
+const FILE_FORMAT = "utf-8"
+
 export const CACHE_FILE_NAME = ".paopu-cache"
-export const FILE_FORMAT = "utf-8"
 
 export const getFileContent = (target) => {
   const targetPath = path.resolve(process.cwd(), target)
