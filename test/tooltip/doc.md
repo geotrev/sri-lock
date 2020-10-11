@@ -1,7 +1,7 @@
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/helper@0.1.0/dist/helper.js"
+  src="https://unpkg.com/npm/helper@0.1.0/dist/helper.js"
   integrity="sha256-4eCeGYBbcfBB/bLzVuDg8NFDE53W1Do+J7TWsGStx2M="
   crossorigin="anonymous"
 ></script>

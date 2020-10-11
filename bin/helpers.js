@@ -26,35 +26,61 @@ export const writeFileContent = (target, content) => {
 export const exists = (target) =>
   fs.existsSync(path.resolve(process.cwd(), target)) !== false
 
-export const canUpdate = (name, rootPath, module, resources) => {
-  let canUpdate = true
+export const validCacheEntry = (name, packageConfig = {}) => {
+  let isValid = true
 
-  /* eslint-disable no-console */
-  if (!rootPath && !module) {
-    logger.err(
-      `Package '${name}' must have one of 'module' or 'path' options, skipping.`
-    )
-    canUpdate = false
-  }
+  const { resources, targets, resourceBasePath, module = true } = packageConfig
 
-  if (rootPath && module) {
+  if (!resourceBasePath && !module) {
     logger.err(
-      `Package '${name}' can only have one of 'module' or 'path' options, skipping.`
+      `Package '${name}' must have 'resourceBasePath' defined if it's not a module, skipping`
     )
-    canUpdate = false
+    isValid = false
+  } else if (resourceBasePath && module) {
+    logger.err(
+      `Package '${name}' can only have one of 'module' or 'resourceBasePath' options, skipping`
+    )
+    isValid = false
   }
 
   if (!Array.isArray(resources) || !resources.length) {
-    canUpdate = false
+    logger.err(`Package '${name}' has no resources, skipping`)
+    isValid = false
   }
-  /* eslint-enable no-console */
 
-  return canUpdate
+  if (!Array.isArray(targets) || !targets.length) {
+    logger.err(`Package '${name}' has no targets, skipping`)
+    isValid = false
+  }
+
+  return isValid
+}
+
+export const normalizeCacheEntry = (config) => {
+  return {
+    ...config,
+    resources: {},
+    module: typeof config.module === "boolean" ? config.module : true,
+    urlPattern: config.urlPattern || "cdn.jsdelivr.net",
+  }
+}
+
+export const getConfig = (customConfig) => {
+  let RESOLVED_CONFIG_NAME = customConfig || CONFIG_FILE_NAME
+
+  if (!exists(RESOLVED_CONFIG_NAME)) {
+    logger.finish(
+      `Couldn't resolve config file: ${RESOLVED_CONFIG_NAME}, exiting`
+    )
+    process.exit()
+  }
+
+  return getJSON(RESOLVED_CONFIG_NAME)
 }
 
 export const getCache = () => {
   if (exists(CACHE_FILE_NAME)) {
-    return getJSON(CACHE_FILE_NAME)
+    return getFileContent(CACHE_FILE_NAME)
   }
 
   return {}

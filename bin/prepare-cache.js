@@ -7,91 +7,88 @@ import {
   writeFileContent,
   getFileContent,
   exists,
+  normalizeCacheEntry,
   getCache,
-  canUpdate,
+  getConfig,
+  validCacheEntry,
   CACHE_FILE_NAME,
-  CONFIG_FILE_NAME,
 } from "./helpers.js"
 import * as logger from "./logger.js"
 
-let args = process.argv
-let RESOLVED_CONFIG_NAME = CONFIG_FILE_NAME
+let customConfig
+const args = process.argv
 
 if (args) {
   args.forEach((arg) => {
     const getVal = (parts) => parts[parts.length - 1]
     if (arg.startsWith("--config=") || arg.startsWith("-c=")) {
-      RESOLVED_CONFIG_NAME = getVal(arg.split("="))
+      customConfig = getVal(arg.split("="))
     }
   })
 }
 
-logger.begin("Rebuilding cache...")
-
-if (!exists(RESOLVED_CONFIG_NAME)) {
-  logger.finish(
-    `Couldn't resolve config file: ${RESOLVED_CONFIG_NAME}, exiting.`
-  )
-  process.exit()
-}
-
-const paopuConfig = getJSON(RESOLVED_CONFIG_NAME)
-const detectedCache = getCache()
+const paopuConfig = getConfig(customConfig)
 const SHA256 = new Hashes.SHA256()
 const getSHA = (data) => SHA256.b64(data)
 const nextCache = {}
 
-for (let name in paopuConfig) {
-  const { resources, path: resourceRoot, module = false } = paopuConfig[name]
-  nextCache[name] = detectedCache[name] || {}
+logger.begin("Rebuilding cache...")
 
-  const root = module ? "node_modules/" + name : resourceRoot
+for (let packageName in paopuConfig) {
+  const packageConfig = paopuConfig[packageName]
+  const normalizedCache = normalizeCacheEntry(packageConfig)
 
-  if (!canUpdate(name, resourceRoot, module, resources)) {
+  if (!validCacheEntry(packageName, packageConfig)) {
     continue
   }
+
+  nextCache[packageName] = normalizedCache
+
+  const root = normalizedCache.module
+    ? `node_modules/${packageName}`
+    : normalizedCache.resourceBasePath
 
   // Update version
 
-  const pkgPath = `${root}/package.json`
-  if (!exists(pkgPath)) {
-    logger.err(`Package '${name}' has unresolvable package.json, skipping.`)
+  const pkgJson = `${root}/package.json`
+  if (!exists(pkgJson)) {
+    logger.err(
+      `Package '${packageName}' has unresolvable package.json, skipping`
+    )
     continue
   }
 
-  const pkgVersion = getJSON(pkgPath).version
+  const nextVersion = getJSON(pkgJson).version
 
-  if (pkgVersion !== nextCache[name].version) {
-    nextCache[name].version = pkgVersion
+  if (nextVersion !== nextCache[packageName].version) {
+    nextCache[packageName].version = nextVersion
   }
 
   // Update SRI hashes
 
-  const length = resources.length
+  const length = packageConfig.resources.length
   let index = -1
 
   while (++index < length) {
-    const resource = resources[index]
+    const resource = packageConfig.resources[index]
     const resourcePath = path.resolve(process.cwd(), root, resource)
 
     if (!exists(resourcePath)) {
-      logger.err(`Resource '${resource}' is unresolvable, skipping.`)
-      logger.err(`- Tried path: ${resourcePath}`)
+      logger.err(`Resource at '${resourcePath}' is unresolvable, skipping`)
       continue
     }
 
     const resourceContent = getFileContent(resourcePath)
     const computedSRI = `sha256-${getSHA(resourceContent)}`
-    nextCache[name][resource] = computedSRI
 
-    if (computedSRI !== nextCache[name][resource]) {
-      nextCache[name][resource.file] = computedSRI
-    }
+    nextCache[packageName].resources[resource] = computedSRI
   }
 }
 
-if (detectedCache !== nextCache) {
-  writeFileContent(CACHE_FILE_NAME, JSON.stringify(nextCache))
+const cacheToString = JSON.stringify(nextCache, null, 2)
+if (getCache() === cacheToString) {
+  logger.finish("Cache unchanged")
+} else {
+  writeFileContent(CACHE_FILE_NAME, cacheToString)
+  logger.finish(`Cache saved to '${process.cwd()}/.paopu-cache'`)
 }
-
-logger.finish(`Cache saved to '${process.cwd()}/.paopu-cache'`)
