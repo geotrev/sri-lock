@@ -2,6 +2,7 @@
 
 import path from "path"
 import Hashes from "jshashes"
+import { getArgs } from "./parse-args.js"
 import {
   getJSON,
   writeFileContent,
@@ -15,24 +16,13 @@ import {
 } from "./helpers.js"
 import * as logger from "./logger.js"
 
-let customConfig
-const args = process.argv
+logger.begin("Rebuilding cache...")
 
-if (args) {
-  args.forEach((arg) => {
-    const getVal = (parts) => parts[parts.length - 1]
-    if (arg.startsWith("--config=") || arg.startsWith("-c=")) {
-      customConfig = getVal(arg.split("="))
-    }
-  })
-}
-
-const paopuConfig = getConfig(customConfig)
+const cliArgs = getArgs()
+const paopuConfig = getConfig(cliArgs.config || cliArgs.c)
 const SHA256 = new Hashes.SHA256()
 const getSHA = (data) => SHA256.b64(data)
 const nextCache = {}
-
-logger.begin("Rebuilding cache...")
 
 for (let packageName in paopuConfig) {
   const packageConfig = paopuConfig[packageName]
