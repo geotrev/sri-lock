@@ -73,25 +73,36 @@ The basic configuration will have `resources` and `targets` keys. Each is an arr
 
 ### Monorepos
 
-If you're working in a monorepo, you probably don't want to look in `node_modules`. Luckily there's an option to deal with that. Let's create it:
+If you're working in a monorepo, you may not necessarily look into `node_modules` if you're updating your packages. Luckily there's an option to deal with that. Let's try it:
 
 ```json
 {
   "package-1": {
     "module": false,
-    "resoureBasePath": "packages/package-1",
+    "resourceBasePath": "packages/package-1",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
-    "targets": ["README.md", "test/index.html"]
+    "targets": [
+      "packages/package-1/README.md",
+      "packages/package-1/test/index.html"
+    ]
   },
   "package-2": {
     "module": false,
-    "resoureBasePath": "packages/package-2",
+    "resourceBasePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
-    "targets": ["README.md", "test/index.html"]
+    "targets": [
+      "packages/package-1/README.md",
+      "packages/package-1/test/index.html"
+    ]
   },
   "my-cool-package": {
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
-    "targets": ["packages/package-1/README.md", "packages/package-1/test/index.html"]
+    "targets": [
+      "packages/package-1/README.md",
+      "packages/package-1/test/index.html",
+      "packages/package-2/README.md",
+      "packages/package-2/test/index.html"
+    ],
     "urlPattern": "unpkg.com"
   }
 }
@@ -100,7 +111,9 @@ If you're working in a monorepo, you probably don't want to look in `node_module
 A bit dicier, let's break it down:
 
 - Both `package-1` and `package-2` are flagged as non-modules, and given custom folder paths under `packages/*`.
-- `my-cool-package` is still used, but it's only under `packages/package-1`. In this case, we're probably using `my-cool-package` as a peer dependency to `package-1` and want to keep that up to date as necessary.
+- `my-cool-package` is still used, but its `targets` are under both `package-1` and `package-2`. In this case, we're probably using `my-cool-package` as a peer dependency and want to keep that up to date as necessary.
+
+Note that this configuration assumes your dependencies are hoisted to the root `node_modules` of your monorepo. This will be customizable in the future.
 
 ### Config options
 
@@ -156,3 +169,5 @@ Override the default configuration filename.
 ## TODO
 
 - Add more hashing options via config and cli: `128`, `384`, `512`?
+- Make `targetBasePath` a thing.
+- Make `moduleBasePath` a thing.

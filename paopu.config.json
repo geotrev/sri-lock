@@ -20,8 +20,13 @@
   "no-targets": {
     "resources": ["some/path/doc.md"]
   },
-  "no-resource-base-path-or-module": {
+  "missing-resource-base-path": {
     "module": false,
+    "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
+    "targets": ["test/tooltip/doc.md"]
+  },
+  "no-resource-base-path-for-module": {
+    "resourceBasePath": "some/resource/path",
     "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
     "targets": ["test/tooltip/doc.md"]
   }

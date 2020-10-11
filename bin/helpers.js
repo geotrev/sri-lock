@@ -28,29 +28,32 @@ export const exists = (target) =>
   fs.existsSync(path.resolve(process.cwd(), target)) !== false
 
 export const validCacheEntry = (name, packageConfig = {}) => {
+  const { resources, targets, resourceBasePath, module = true } = packageConfig
   let isValid = true
 
-  const { resources, targets, resourceBasePath, module = true } = packageConfig
-
-  if (!resourceBasePath && !module) {
+  if (typeof resourceBasePath !== "string" && !module) {
     logger.err(
-      `Package '${name}' must have 'resourceBasePath' defined if it's not a module, skipping`
+      `Config for '${name}' must have the option 'resourceBasePath: <string>' if 'module: false' is given, skipping`
     )
     isValid = false
   } else if (resourceBasePath && module) {
     logger.err(
-      `Package '${name}' can only have one of 'module' or 'resourceBasePath' options, skipping`
+      `Config for '${name}' can only have one of 'module: true' or 'resourceBasePath: <string>' options, skipping`
     )
     isValid = false
   }
 
   if (!Array.isArray(resources) || !resources.length) {
-    logger.err(`Package '${name}' has no resources, skipping`)
+    logger.err(
+      `Config for '${name}' must use the format 'resources: [<string>, <string>, ...]', skipping`
+    )
     isValid = false
   }
 
   if (!Array.isArray(targets) || !targets.length) {
-    logger.err(`Package '${name}' has no targets, skipping`)
+    logger.err(
+      `Config for '${name}' must use the format 'targets: [<string>, <string>, ...]', skipping`
+    )
     isValid = false
   }
 
