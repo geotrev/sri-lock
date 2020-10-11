@@ -6,6 +6,8 @@ Read the [Why](#why) section for more details.
 
 Paopu currently only works with Node 14, but will support 10+ in the future.
 
+Feel free to submit an issue or pull request. :)
+
 ## Install & Run
 
 1. Install it in your project:
@@ -30,7 +32,7 @@ Paopu creates a `.paopu-cache` file to track version numbers and sub-resource in
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"
+  src="https://cdn.jsdelivr.net/npm/my-cool-package@0.3.2/dist/bundle.min.js"
   integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
   crossorigin="anonymous"
 ></script>
@@ -44,7 +46,7 @@ Not only that, you have the tags in multiple files. Maybe you can get away with 
 
 Kind of annoying, right?
 
-**Solution:** Install Paopu, add a config that describes the above setup, then run the CLI tool. Done. 💪✨
+**Solution:** Install Paopu, add a config, then run the CLI tool. Done. 💪✨
 
 ## Create a config
 
@@ -54,62 +56,51 @@ First, create the file:
 $ touch paopu.config.json
 ```
 
-Then, create a config that describes your CDN resources. The config is JSON, with each top level key being the _npm package name_ of your resource, and an object value describing key metadata needed to update the `script` tag.
+Then add some data that describes your CDN resources. Each top level key should be an _npm package name_ of your resource (or otherwise have a `package.json` in its [folder root](#resourcebasepath)). The value is an object with identifying information about the CDN script tag(s).
 
-Using the example in the [Why?](#why) section, here's what that script tag's configuration would look like:
+Using the example in the [Why?](#why) section, let's create a simple configuration describing it:
 
 ```json
 {
-  "my-package": {
-    "resources": ["umd/my-package.min.js", "umd/my-package.js"],
+  "my-cool-package": {
+    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   }
 }
 ```
 
-This will tell Paopu that each file in `targets` will be searched for a `script` tag, and if those script tags contain `src` attributes matching a [cdn pattern](#urlpattern), then they will be updated using the files specified under `resources`. In the same way, the package's `version` will be derived from the resource's root directory (e.g., `node_modules/*/package.json`).
+The basic configuration will have `resources` and `targets` keys. Each is an array of the resource file path (under `node_modules` by default) and the files containing the script tags you want to change, respectively.
 
-But wait, there's more. You can also configure a resource to be searched locally, which is useful for monorepos:
+### Monorepos
 
-```json
-{
-  "react": {
-    "path": "packages/react",
-    "version": "16.13.1",
-    "resources": ["umd/react.production.min.js", "umd/react.development.js"],
-    "targets": ["README.md", "test/index.html"]
-  }
-}
-```
-
-NOTE: The resource isn't using `module: true` anymore, and that's intentional, as you can't have both a module resource that's also defined locally using `path`. Of course, you can always manually add `node_modules` to the path, which is necessary for things like packages installed from monorepos (e.g., `@babel/*`, `@rollup/*`, etc).
-
-Just like before, the `version` is derived from the package's root folder, but this time in the monorepo.
-
-Alright, that's pretty cool. But what about peer dependencies? That is, maybe you're updating your `targets` in `packages/react`, but there are peer CDN script tags that needs to be updated in that directory too. In the case of React, that might be `react-dom`, so let's add that too:
+If you're working in a monorepo, you probably don't want to look in `node_modules`. Luckily there's an option to deal with that. Let's create it:
 
 ```json
 {
-  "react": {
-    "path": "packages/react",
-    "version": "16.13.1",
-    "resources": ["umd/react.production.min.js", "umd/react.development.js"],
+  "package-1": {
+    "module": false,
+    "resoureBasePath": "packages/package-1",
+    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   },
-  "react-dom": {
-    "path": "packages/react-dom",
-    "peer": true,
-    "version": "16.13.1",
-    "resources": [
-      "umd/react-dom.production.min.js",
-      "umd/react-dom.development.js"
-    ],
+  "package-2": {
+    "module": false,
+    "resoureBasePath": "packages/package-2",
+    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
+  },
+  "my-cool-package": {
+    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
+    "targets": ["packages/package-1/README.md", "packages/package-1/test/index.html"]
+    "urlPattern": "unpkg.com"
   }
 }
 ```
 
-Now as Paopu is updating `react`, it will check if any of the scripts in its `targets` files happen to be for `react-dom` and update them.
+A bit dicier, let's break it down:
+
+- Both `package-1` and `package-2` are flagged as non-modules, and given custom folder paths under `packages/*`.
+- `my-cool-package` is still used, but it's only under `packages/package-1`. In this case, we're probably using `my-cool-package` as a peer dependency to `package-1` and want to keep that up to date as necessary.
 
 ### Config options
 
@@ -149,11 +140,11 @@ A pattern to be used when checking script tags in your files. Paopu will only up
 
 Any CLI options given will override the defaults used by the tool.
 
-### `--config`
+### Custom config
 
-Alias: `-c`
+Flags: `--config`, `-c`
 
-Example usage: `--config=my-custom-file.json`
+Example usage: `paopu -c my-custom-file.json`
 
 Override the default configuration filename.
 
@@ -164,4 +155,4 @@ Override the default configuration filename.
 
 ## TODO
 
-- Add more hashing options: `128`, `384`, `512`?
+- Add more hashing options via config and cli: `128`, `384`, `512`?
