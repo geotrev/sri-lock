@@ -22,21 +22,18 @@ export function writeToTarget(target, name, packageConfig) {
    * See if any detectedTags contain the urlPattern and at least
    * one resource
    */
-  let matchedResource = null
+  const resourceNames = Object.keys(packageConfig.resources)
   const detectedScriptTags = detectedTags.filter(
     (tag) =>
       tag.indexOf(packageConfig.urlPattern) > -1 &&
-      Object.keys(packageConfig.resources).some((resource) => {
-        const hasResource = tag.indexOf(resource) > -1
-        if (hasResource) matchedResource = resource
-        return hasResource
-      })
+      resourceNames.some((resource) => tag.indexOf(resource) > -1)
   )
 
   if (!detectedScriptTags.length) return
 
   const nextScriptTags = detectedScriptTags.map((tag) => {
-    const newHash = packageConfig.resources[matchedResource]
+    const targetResource = resourceNames.filter((name) => tag.includes(name))[0]
+    const newHash = packageConfig.resources[targetResource]
     const hashMatches = tag.match(Patterns.SRI)
     const oldHash = hashMatches[0]
     const oldVersion = tag.match(Patterns.VERSION)
