@@ -92,3 +92,9 @@ export function getCache() {
 
   return {}
 }
+
+export function clearCache() {
+  if (exists(CACHE_FILE_NAME)) {
+    fs.unlinkSync(path.resolve(process.cwd(), CACHE_FILE_NAME))
+  }
+}

@@ -10,7 +10,7 @@ export function begin(...msg) {
 }
 
 export function err(msg, type = "error") {
-  console[type](tag, msg)
+  console[type](tag, "error:", msg)
 }
 
 export function print(...msg) {

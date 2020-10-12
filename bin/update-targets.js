@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import * as logger from "./logger.js"
-import { getCache, getJSON } from "./helpers.js"
-import { writeToTarget } from "./update-target.js"
+import { clearCache, getCache, getJSON } from "./helpers.js"
+import { writeToTarget } from "./write-to-target.js"
 
 const paopuCache = getJSON(getCache())
 
 const packageNames = Object.keys(paopuCache)
-logger.begin("Updating CDN tags:", packageNames)
+logger.begin("Updating CDN tags for packages:", packageNames)
 
 // Update targets
 
@@ -18,6 +18,8 @@ for (let name in paopuCache) {
     writeToTarget(target, name, packageConfig)
   )
 }
+
+clearCache()
 
 logger.finish("CDN tags updated ✨")
 logger.empty()

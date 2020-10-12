@@ -23,8 +23,6 @@ $ npm i -D paopu
 $ paopu
 ```
 
-Paopu creates a `.paopu-cache` file to track version numbers and sub-resource integrity hashes for packages defined in your config. You can add this file to your `.gitignore` if you prefer not to track it; the utility works either way.
-
 ## Why?
 
 **Scenario:** Let's say you want to tell the world that your npm package's bundle can be accessed on CDN (any cdn will work). You might include an example script in your README, like so:
