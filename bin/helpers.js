@@ -9,14 +9,16 @@ const FILE_FORMAT = "utf-8"
 
 export const CACHE_FILE_NAME = ".paopu-cache"
 
-export const getFileContent = (target) => {
+export function getFileContent(target) {
   const targetPath = path.resolve(process.cwd(), target)
   return fs.readFileSync(targetPath, FILE_FORMAT)
 }
 
-export const getJSON = (target) => JSON.parse(target)
+export function getJSON(target) {
+  return JSON.parse(target)
+}
 
-export const writeFileContent = (target, content) => {
+export function writeFileContent(target, content) {
   return fs.writeFileSync(
     path.resolve(process.cwd(), target),
     content,
@@ -24,10 +26,11 @@ export const writeFileContent = (target, content) => {
   )
 }
 
-export const exists = (target) =>
-  fs.existsSync(path.resolve(process.cwd(), target)) !== false
+export function exists(target) {
+  return fs.existsSync(path.resolve(process.cwd(), target)) !== false
+}
 
-export const validCacheEntry = (name, packageConfig = {}) => {
+export function isValidCacheEntry(name, packageConfig = {}) {
   const { resources, targets, resourceBasePath, module = true } = packageConfig
   let isValid = true
 
@@ -60,7 +63,7 @@ export const validCacheEntry = (name, packageConfig = {}) => {
   return isValid
 }
 
-export const normalizeCacheEntry = (config) => {
+export function normalizeCacheEntry(config) {
   return {
     ...config,
     resources: {},
@@ -69,7 +72,7 @@ export const normalizeCacheEntry = (config) => {
   }
 }
 
-export const getConfig = (customConfig) => {
+export function getConfig(customConfig) {
   let RESOLVED_CONFIG_NAME = customConfig || CONFIG_FILE_NAME
 
   if (!exists(RESOLVED_CONFIG_NAME)) {
@@ -82,7 +85,7 @@ export const getConfig = (customConfig) => {
   return getJSON(getFileContent(RESOLVED_CONFIG_NAME))
 }
 
-export const getCache = () => {
+export function getCache() {
   if (exists(CACHE_FILE_NAME)) {
     return getFileContent(CACHE_FILE_NAME)
   }

@@ -21,3 +21,7 @@ export function finish(msg = "") {
   if (!msg) return
   console.info(tag, msg)
 }
+
+export function empty() {
+  console.log("")
+}
