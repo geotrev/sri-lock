@@ -99,11 +99,13 @@ One way is to add just one config file at the monorepo root, like this:
 
 To make the config more readable, you can use both `resourceBasePath` and `targetBasePath`. They do what their name suggests: prepend a static path to each resource and target path, respectively.
 
-The second way is to use `paopu` in each package individually, including a config in each package root, similar to the simple configuration from before.
+Note that because those are base paths, they should resolve to a package root with a `package.json`.
+
+The second way is to use `paopu` in each package individually, similar to the simple configuration from before. In this case, each package root should contain a `paopu.config.json`, and include `paopu` as a dev dependency.
 
 ### External modules
 
-Sometimes you need to link to external modules because they are required as dependents/peers. To do this, mark your entry with the `module` option. let's use the previous monorepo example:
+Sometimes you need to link to external modules because they are required as dependents/peers. To do this, mark your entry with the `module` option. Let's extend the monorepo example from above:
 
 ```json
 {
@@ -125,9 +127,9 @@ Sometimes you need to link to external modules because they are required as depe
 }
 ```
 
-Using the `module` option will do one main thing to the above config, which is prepend `node_modules/my-node-package` to each path in `resources` only.
+Using the `module` option will do one main thing to the above config, which is prepend `node_modules/my-node-package` to each path in `resources`. Worth noting is any `resourceBasePath` you set here will be ignored. 
 
-Note that if you try to use `resourceBasePath`, nothing will happen. If you have a non-standard module path, you can leave `module` as `false` and hardcode the path into your `resources`, alternatively.
+In the case of non-standard module paths, you can leave `module` as `false` (or simply exclude the option) and hardcode the path onto your resource paths. Alternatively, you can set `resourceBasePath`, i.e. `node_modules/@some-namespace/package-name/`.
 
 ## Config options
 
@@ -135,7 +137,7 @@ Note that if you try to use `resourceBasePath`, nothing will happen. If you have
 
 Type: `Array.<string>` | **required**
 
-An array of file paths. Each will have a SHA derived from it.
+An array of file paths. Each will have a SHA derived from it. Additionally, the `package.json` of the resource directory (as defined by a module root, your repo root, or the root defined by `resourceBasePath`) is used to derive a `version`.
 
 ### `targets`
 
@@ -149,7 +151,7 @@ Type: `boolean`
 
 Default: `false`
 
-This treats your resource as a dependent/peer.
+This tells Paopu to look in your `node_modules` directory to resolve paths defined in `resources`.
 
 For example, given this config entry:
 
@@ -163,7 +165,7 @@ For example, given this config entry:
 }
 ```
 
-Paopu will modify each path under `resources` to look in `node_modules`. In this case, the finally resource path would be: `node_modules/my-cool-package/dist/my-cool-package.min.js`.
+Paopu will modify each path under `resources` to be: `node_modules/my-cool-package/<RESOURCE_PATH>`.
 
 If given, `module` will nullify the application of `resourceBasePath` to paths in `resources`.
 
@@ -175,7 +177,9 @@ Default: `'.'`
 
 If given, will be prepended to each path in `resources`.
 
-If this option is given while `module` is `true`, the base path will be ignored. In the case of non-standard module paths (e.g., monorepo folder structures), leave `module` as `false` and hardcode the path in each resource.
+If `resourceBasePath` is given while `module` is `true`, this option will be ignored.
+
+In the case of non-standard module paths, you can leave `module` as `false` (or simply exclude the option) and hardcode the path onto your resource paths. Alternatively, you can set `resourceBasePath`, i.e. `node_modules/@some-namespace/package-name/`.
 
 ### `targetBasePath`
 
