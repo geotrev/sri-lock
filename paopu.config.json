@@ -16,6 +16,7 @@
     "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
     "targets": ["test/tooltip/doc.md"]
   },
+
   "no-resources": {
     "targets": ["some/path/doc.md"]
   },

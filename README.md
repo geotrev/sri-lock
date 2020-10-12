@@ -66,10 +66,11 @@ Create a `paopu.config.json` at the root of your project. Then create a simple c
 Some things of note:
 
 - The key of the config entry is your package name
-- A `version` will be derived from your project's `package.json`.
 - Each `resources` item is a path leading to a file to be hashed for a sub-resource integrity value.
 - Similarly, each `targets` item is a path leading to a file with CDN script tags.
 - By default, the root of your project will be the base path when finding your resources/targets.
+- A `version` will be derived from your project's `package.json`. If your tag's `src` attribute has no version, it isn't used.
+- A base64 hash will be derived from each file in `resources`. If your tag doesn't have an `integrity` attribute, nothing happens.
 
 See [CLI options](#cli-options) for customization options.
 
@@ -94,7 +95,7 @@ One way is to add just one config file at the monorepo root, like this:
 }
 ```
 
-To make the config a little more readable, `basePath` is used to find the package root, which means you can exclude first two sub-folders from paths in `resources` and `targets`.
+To make the config more readable, `basePath` is used to find the package root, which means you can exclude that portion from paths in `resources` and `targets`.
 
 The second way is to use `paopu` in each package individually, including a config in each package root, similar to the simple configuration from before.
 
@@ -112,13 +113,11 @@ Sometimes you need to link to external modules because they are required as depe
   },
   "my-node-package": {
     "module": true,
-    "basePath": "packages",
+    "basePath": "packages/package-1",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": [
       "package-1/README.md",
-      "package-1/test/index.html",
-      "package-2/README.md",
-      "package-2/test/index.html"
+      "package-1/test/index.html"
     ]
   }
 }
@@ -127,9 +126,7 @@ Sometimes you need to link to external modules because they are required as depe
 Using the `module` option will do two main things to the above config:
 
 - Prepend `node_modules/my-node-package` to each path in `resources` only
-- Changes the scope of `basePath` by only modifying paths in `targets`.
-
-The above applies to non-monorepo configurations as well.
+- `basePath` will only apply to paths in `targets`.
 
 ## Config options
 
@@ -143,11 +140,13 @@ An array of file paths. Each will have a SHA derived from it.
 
 Type: `Array.<string>` | **required**
 
-An array of file paths, each being a target with a `<script>` tag to be updated.
+An array of file paths, each possibly containing `<script>` tags to be updated. If there are no script tags, nothing happens.
 
 ### `module`
 
-Type: `boolean` | default: `false`
+Type: `boolean`
+
+Default: `false`
 
 This treats your resource as a dependent/peer.
 
@@ -165,9 +164,23 @@ For example, given this config entry:
 
 Paopu will modify each path under `resources` to look in `node_modules`. In this case, the finally resource path would be: `node_modules/my-cool-package/dist/my-cool-package.min.js`.
 
+If given, `module` will nullify the application of `basePath` to paths in `resources`.
+
+### `basePath`
+
+Type: `string`
+
+Default: `'.'`
+
+If given, will be prepended to each path in `resources` and `targets`.
+
+If `basePath` is given while `module` is `true`, this option will only apply to `targets`.
+
 ### `urlPattern`
 
-Type: `string` | default: `'cdn.jsdelivr.net'`
+Type: `string`
+
+Default: `'cdn.jsdelivr.net'`
 
 A pattern to be used when checking script tags in your files. Paopu will only update tags with `src` attributes containing the pattern.
 
@@ -179,6 +192,8 @@ Any CLI options given will override the defaults used by the tool.
 
 Flags: `--config`, `-c`
 
+Default: `paopu.config.json`
+
 Example usage: `paopu -c my-custom-file.json`
 
 Override the default configuration filename.
@@ -186,6 +201,8 @@ Override the default configuration filename.
 ### Debug mode
 
 Flags: `--debug`, `-d`
+
+Default: `false`
 
 Example usage: `paopu -d`
 
