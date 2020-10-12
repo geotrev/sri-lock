@@ -31,8 +31,15 @@ export function exists(target) {
 }
 
 export function isValidCacheEntry(name, packageConfig = {}) {
-  const { resources, targets } = packageConfig
+  const { resources, targets, module, resourceBasePath } = packageConfig
   let isValid = true
+
+  if (module && resourceBasePath) {
+    logger.err(
+      `Config for '${name}' is a module, so 'resourceBasePath' will be ignored`,
+      "warn"
+    )
+  }
 
   if (!Array.isArray(resources) || !resources.length) {
     logger.err(
@@ -52,12 +59,13 @@ export function isValidCacheEntry(name, packageConfig = {}) {
 }
 
 export function normalizeCacheEntry(config) {
-  const basePath = config.basePath || "."
   return {
     ...config,
-    basePath,
+    resourceBasePath: config.resourceBasePath || ".",
     resources: {},
-    targets: config.targets.map((target) => `${basePath}/${target}`),
+    targets: config.targets.map(
+      (target) => `${config.targetBasePath || "."}/${target}`
+    ),
     module: typeof config.module === "boolean" ? config.module : false,
     urlPattern: config.urlPattern || "cdn.jsdelivr.net",
   }

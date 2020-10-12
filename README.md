@@ -52,7 +52,7 @@ Kind of annoying, right?
 
 ## Create a config
 
-Create a `paopu.config.json` at the root of your project. Then create a simple configuration describing your package. We'll use the example from above:
+Create a `paopu.config.json` at the root of your project. Then create a simple configuration describing your package. We'll use the example tag from above:
 
 ```json
 {
@@ -65,7 +65,7 @@ Create a `paopu.config.json` at the root of your project. Then create a simple c
 
 Some things of note:
 
-- The key of the config entry is your package name
+- The key of the config entry is your package name.
 - By default, the root of your project is the base path when resolving files.
 - Each `resources` item is a path leading to a file to be hashed for a sub-resource integrity value.
 - Similarly, each `targets` item is a path leading to a file with CDN script tags.
@@ -83,19 +83,21 @@ One way is to add just one config file at the monorepo root, like this:
 ```json
 {
   "package-1": {
-    "basePath": "packages/package-1",
+    "resourceBasePath": "packages/package-1",'
+    "targetBasePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   },
   "package-2": {
-    "basePath": "packages/package-2",
+    "resourceBasePath": "packages/package-2",'
+    "targetBasePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   }
 }
 ```
 
-To make the config more readable, `basePath` is used to find the package root, which means you can exclude that portion from paths in `resources` and `targets`.
+To make the config more readable, you can use both `resourceBasePath` and `targetBasePath`. They do what their name suggests: prepend a static path to each resource and target path, respectively.
 
 The second way is to use `paopu` in each package individually, including a config in each package root, similar to the simple configuration from before.
 
@@ -113,20 +115,19 @@ Sometimes you need to link to external modules because they are required as depe
   },
   "my-node-package": {
     "module": true,
-    "basePath": "packages/package-1",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
+    "targetBasePath": "packages/package-1",
     "targets": [
-      "package-1/README.md",
-      "package-1/test/index.html"
+      "README.md",
+      "test/index.html"
     ]
   }
 }
 ```
 
-Using the `module` option will do two main things to the above config:
+Using the `module` option will do one main thing to the above config, which is prepend `node_modules/my-node-package` to each path in `resources` only.
 
-- Prepend `node_modules/my-node-package` to each path in `resources` only
-- `basePath` will only apply to paths in `targets`.
+Note that if you try to use `resourceBasePath`, nothing will happen. If you have a non-standard module path, you can leave `module` as `false` and hardcode the path into your `resources`, alternatively.
 
 ## Config options
 
@@ -164,17 +165,25 @@ For example, given this config entry:
 
 Paopu will modify each path under `resources` to look in `node_modules`. In this case, the finally resource path would be: `node_modules/my-cool-package/dist/my-cool-package.min.js`.
 
-If given, `module` will nullify the application of `basePath` to paths in `resources`.
+If given, `module` will nullify the application of `resourceBasePath` to paths in `resources`.
 
-### `basePath`
+### `resourceBasePath`
 
 Type: `string`
 
 Default: `'.'`
 
-If given, will be prepended to each path in `resources` and `targets`.
+If given, will be prepended to each path in `resources`.
 
-If `basePath` is given while `module` is `true`, this option will only apply to `targets`.
+If this option is given while `module` is `true`, the base path will be ignored. In the case of non-standard module paths (e.g., monorepo folder structures), leave `module` as `false` and hardcode the path in each resource.
+
+### `targetBasePath`
+
+Type: `string`
+
+Default: `'.'`
+
+If given, will be prepended to each path in `targets`.
 
 ### `urlPattern`
 

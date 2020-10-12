@@ -1,18 +1,20 @@
 {
   "helper": {
-    "basePath": "test",
+    "resourceBasePath": "test",
+    "targetBasePath": "test",
     "resources": ["helper.js"],
     "targets": ["doc.md", "tooltip/doc.md"],
     "urlPattern": "unpkg.com"
   },
   "upgraded-element": {
     "module": true,
-    "basePath": "test",
+    "targetBasePath": "test",
     "resources": ["dist/upgraded-element.js", "dist/upgraded-element.min.js"],
     "targets": ["upgraded-element/doc.md", "tooltip/doc.md", "doc.md"]
   },
   "@spider-ui/tooltip": {
     "module": true,
+    "resourceBasePath": "wont/be/used",
     "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
     "targets": ["test/tooltip/doc.md"]
   },
