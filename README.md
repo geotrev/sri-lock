@@ -1,12 +1,16 @@
 # ✩ Paopu ✩
 
-A CLI tool to manage your CDN script tags in files. Tell it which files to update, which to generate hashes from, then let Paopu handle the rest. Currently only `SHA256` is supported, but there will be more Soon™.
+A CLI tool to manage your CDN script tags in files. Tell it which files to update, which to generate SRI hashes from, then let Paopu handle the rest.
 
 Read the [Why](#why) section for more details.
 
 Paopu currently only works with Node 14, but will support 10+ in the future.
 
 Feel free to submit an issue or pull request. :)
+
+**TODO:**
+
+- More hashing options (currently only `SHA256` is supported).
 
 ## Install & Run
 
@@ -25,12 +29,12 @@ $ paopu
 
 ## Why?
 
-**Scenario:** Let's say you want to tell the world that your npm package's bundle can be accessed on CDN (any cdn will work). You might include an example script in your README, like so:
+**Scenario:** Let's say you want to tell the world that your package's bundle can be accessed on a public CDN. You might include an example script in your README, like so:
 
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/my-cool-package@0.3.2/dist/bundle.min.js"
+  src="https://cdn.jsdelivr.net/npm/my-cool-package@0.3.2/dist/my-cool-package.min.js"
   integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
   crossorigin="anonymous"
 ></script>
@@ -44,106 +48,126 @@ Not only that, you have the tags in multiple files. Maybe you can get away with 
 
 Kind of annoying, right?
 
-**Solution:** Install Paopu, add a config, then run the CLI tool. Done. 💪✨
+**Solution:** Install Paopu, add a config, then run the CLI tool. Done. 💪
 
 ## Create a config
 
-First, create the file:
-
-```sh
-$ touch paopu.config.json
-```
-
-Then add some data that describes your CDN resources. Each top level key should be an _npm package name_ of your resource (or otherwise have a `package.json` in its [folder root](#resourcebasepath)). The value is an object with identifying information about the CDN script tag(s).
-
-Using the example in the [Why?](#why) section, let's create a simple configuration describing it:
+Create a `paopu.config.json` at the root of your project. Then create a simple configuration describing your package. We'll use the example from above:
 
 ```json
 {
   "my-cool-package": {
+    "resources": ["dist/my-cool-package.min.js", "dist/my-cool-package.js"],
+    "targets": ["README.md", "test/index.html"]
+  }
+}
+```
+
+Some things of note:
+
+- The key of the config entry is your package name
+- A `version` will be derived from your project's `package.json`.
+- Each `resources` item is a path leading to a file to be hashed for a sub-resource integrity value.
+- Similarly, each `targets` item is a path leading to a file with CDN script tags.
+- By default, the root of your project will be the base path when finding your resources/targets.
+
+See [CLI options](#cli-options) for customization options.
+
+### Monorepos
+
+You can work with monorepos in two ways.
+
+One way is to add just one config file at the monorepo root, like this:
+
+```json
+{
+  "package-1": {
+    "basePath": "packages/package-1",
+    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
+    "targets": ["README.md", "test/index.html"]
+  },
+  "package-2": {
+    "basePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   }
 }
 ```
 
-The basic configuration will have `resources` and `targets` keys. Each is an array of the resource file path (under `node_modules` by default) and the files containing the script tags you want to change, respectively.
+To make the config a little more readable, `basePath` is used to find the package root, which means you can exclude first two sub-folders from paths in `resources` and `targets`.
 
-### Monorepos
+The second way is to use `paopu` in each package individually, including a config in each package root, similar to the simple configuration from before.
 
-If you're working in a monorepo, you may not necessarily look into `node_modules` if you're updating your packages. Luckily there's an option to deal with that. Let's try it:
+### External modules
+
+Sometimes you need to link to external modules because they are required as dependents/peers. To do this, mark your entry with the `module` option. let's use the previous monorepo example:
 
 ```json
 {
   "package-1": {
-    "module": false,
-    "resourceBasePath": "packages/package-1",
-    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
-    "targets": [
-      "packages/package-1/README.md",
-      "packages/package-1/test/index.html"
-    ]
+    ...
   },
   "package-2": {
-    "module": false,
-    "resourceBasePath": "packages/package-2",
-    "resources": ["dist/bundle.min.js", "dist/bundle.js"],
-    "targets": [
-      "packages/package-1/README.md",
-      "packages/package-1/test/index.html"
-    ]
+    ...
   },
-  "my-cool-package": {
+  "my-node-package": {
+    "module": true,
+    "basePath": "packages",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": [
-      "packages/package-1/README.md",
-      "packages/package-1/test/index.html",
-      "packages/package-2/README.md",
-      "packages/package-2/test/index.html"
-    ],
-    "urlPattern": "unpkg.com"
+      "package-1/README.md",
+      "package-1/test/index.html",
+      "package-2/README.md",
+      "package-2/test/index.html"
+    ]
   }
 }
 ```
 
-A bit dicier, let's break it down:
+Using the `module` option will do two main things to the above config:
 
-- Both `package-1` and `package-2` are flagged as non-modules, and given custom folder paths under `packages/*`.
-- `my-cool-package` is still used, but its `targets` are under both `package-1` and `package-2`. In this case, we're probably using `my-cool-package` as a peer dependency and want to keep that up to date as necessary.
+- Prepend `node_modules/my-node-package` to each path in `resources` only
+- Changes the scope of `basePath` by only modifying paths in `targets`.
 
-Note that this configuration assumes your dependencies are hoisted to the root `node_modules` of your monorepo. This will be customizable in the future.
+The above applies to non-monorepo configurations as well.
 
-### Config options
+## Config options
 
-#### `resources`
+### `resources`
 
 Type: `Array.<string>` | **required**
 
 An array of file paths. Each will have a SHA derived from it.
 
-#### `targets`
+### `targets`
 
 Type: `Array.<string>` | **required**
 
 An array of file paths, each being a target with a `<script>` tag to be updated.
 
-#### `resourceBasePath`
+### `module`
 
-Type: `string` | default: `undefined`
+Type: `boolean` | default: `false`
 
-**`module` must be false** to use this option.
+This treats your resource as a dependent/peer.
 
-The base directory to be used when finding a non-module resource.
+For example, given this config entry:
 
-#### `module`
+```json
+{
+  "my-cool-package": {
+    "module": true,
+    "resources": ["dist/my-cool-package.min.js"]
+    "targets": ["README.md"]
+  }
+}
+```
 
-Type: `boolean` | default: `true`
-
-Specifies if the resource is located in `node_modules`. Set this to `false` and provide a [`resourceBasePath`](#resourceBasePath) to change the default resource path.
+Paopu will modify each path under `resources` to look in `node_modules`. In this case, the finally resource path would be: `node_modules/my-cool-package/dist/my-cool-package.min.js`.
 
 ### `urlPattern`
 
-Type: `string` | default: `cdn.jsdelivr.net`
+Type: `string` | default: `'cdn.jsdelivr.net'`
 
 A pattern to be used when checking script tags in your files. Paopu will only update tags with `src` attributes containing the pattern.
 
@@ -159,13 +183,15 @@ Example usage: `paopu -c my-custom-file.json`
 
 Override the default configuration filename.
 
+### Debug mode
+
+Flags: `--debug`, `-d`
+
+Example usage: `paopu -d`
+
+If given, Paopu will spit out a `.paopu-cache` file so you can inspect the resolved paths, options, etc., being used by the tool.
+
 ## TL;DR what does this tool do, exactly?
 
 1. Paopu first reads your configuration file, then generates a temporary cache. The cache stores resource version numbers, SRI hashes, and normalized values derived from your config.
-2. Using the cache, Paopu searches and updates the files you defined in `targets`, updating only script tags using a CDN pattern and one of the paths you defined in `resources`.
-
-## TODO
-
-- Add more hashing options via config and cli: `128`, `384`, `512`?
-- Make `targetBasePath` a thing.
-- Make `moduleBasePath` a thing.
+2. Using the cache, Paopu searches and updates the files you defined in `targets`, updating only script tags matching the given `urlPattern` and with `src` attributes containing a path you defined in `resources`.

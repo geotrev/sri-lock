@@ -22,21 +22,21 @@ export function buildCache() {
 
   for (let packageName in paopuConfig) {
     const packageConfig = paopuConfig[packageName]
-    const normalizedCache = normalizeCacheEntry(packageConfig)
-
     if (!isValidCacheEntry(packageName, packageConfig)) {
       continue
     }
 
+    const normalizedCache = normalizeCacheEntry(packageConfig)
+
     newCache[packageName] = normalizedCache
 
-    const root = normalizedCache.module
+    const resourceRoot = normalizedCache.module
       ? `node_modules/${packageName}`
-      : normalizedCache.resourceBasePath
+      : `${normalizedCache.basePath}/.`
 
     // Update version
 
-    const pkgJson = `${root}/package.json`
+    const pkgJson = `${resourceRoot}/package.json`
     if (!exists(pkgJson)) {
       logger.err(
         `Package '${packageName}' has unresolvable package.json, skipping`
@@ -57,7 +57,7 @@ export function buildCache() {
 
     while (++index < length) {
       const resource = packageConfig.resources[index]
-      const resourcePath = path.resolve(process.cwd(), root, resource)
+      const resourcePath = path.resolve(process.cwd(), resourceRoot, resource)
 
       if (!exists(resourcePath)) {
         logger.err(`Resource at '${resourcePath}' is unresolvable, skipping`)

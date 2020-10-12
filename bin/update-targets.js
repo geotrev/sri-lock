@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as logger from "./logger.js"
+import { getArgs } from "./parse-args.js"
 import { clearCache, getCache, getJSON } from "./helpers.js"
 import { writeToTarget } from "./write-to-target.js"
 
@@ -19,7 +20,10 @@ for (let name in paopuCache) {
   )
 }
 
-clearCache()
+const cliArgs = getArgs()
+if (!cliArgs.debug && !cliArgs.d) {
+  clearCache()
+}
 
 logger.finish("CDN tags updated ✨")
 logger.empty()
