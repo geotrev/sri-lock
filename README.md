@@ -66,9 +66,9 @@ Create a `paopu.config.json` at the root of your project. Then create a simple c
 Some things of note:
 
 - The key of the config entry is your package name
+- By default, the root of your project is the base path when resolving files.
 - Each `resources` item is a path leading to a file to be hashed for a sub-resource integrity value.
 - Similarly, each `targets` item is a path leading to a file with CDN script tags.
-- By default, the root of your project will be the base path when finding your resources/targets.
 - A `version` will be derived from your project's `package.json`. If your tag's `src` attribute has no version, it isn't used.
 - A base64 hash will be derived from each file in `resources`. If your tag doesn't have an `integrity` attribute, nothing happens.
 
