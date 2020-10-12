@@ -16,56 +16,56 @@ const Patterns = {
 }
 const paopuCache = getJSON(getCache())
 
-const targeted = Object.keys(paopuCache)
-logger.begin("Updating CDN tags:", targeted)
+const packageNames = Object.keys(paopuCache)
+logger.begin("Updating CDN tags:", packageNames)
 
 // Update targets
 
-for (let name in targeted) {
-  const pkg = paopuCache[name]
-  pkg.targets.forEach((target) => {
+for (let name in paopuCache) {
+  const packageConfig = paopuCache[name]
+
+  packageConfig.targets.forEach((target) => {
     if (!exists(target)) {
       logger.print(`Package '${name}' has unresolvable target: '${target}'`)
       return
     }
 
     const fileContent = getFileContent(target)
-    const fileScriptTags = fileContent.match(Patterns.SCRIPT)
-    // .filter((tag) => tag.includes("jsdelivr") || tag.includes("unpkg"))
+    const detectedTags = fileContent.match(Patterns.SCRIPT)
 
-    console.log(fileScriptTags)
+    /**
+     * See if any detectedTags contain the urlPattern and at least
+     * one resource
+     */
+    let matchedResource = null
+    const detectedScriptTags = detectedTags.filter(
+      (tag) =>
+        tag.indexOf(packageConfig.urlPattern) > -1 &&
+        Object.keys(packageConfig.resources).some((resource) => {
+          const hasResource = tag.indexOf(resource) > -1
+          if (hasResource) matchedResource = resource
+          return hasResource
+        })
+    )
 
-    const nextScriptTags = fileScriptTags.map((tag) => {
-      const isMin = tag.includes(".min.js")
-      const oldHash = tag.match(Patterns.SRI)[0]
-      const nextHash = pkg.resources[target]
-      const oldVersion = tag.match(Patterns.VERSION)[0]
+    if (!detectedScriptTags.length) return
 
-      const possiblePeer = Object.keys(peers).filter((peerName) =>
-        tag.includes(peerName)
-      )
-      const peerName = possiblePeer.length ? possiblePeer[0] : null
+    const nextScriptTags = detectedScriptTags.map((tag) => {
+      const newHash = packageConfig.resources[matchedResource]
+      const hashMatches = tag.match(Patterns.SRI)
+      const oldHash = hashMatches[0]
+      const oldVersion = tag.match(Patterns.VERSION)
+      const newVersion = `@${packageConfig.version}/`
 
-      // If known peers were encountered, update them
+      const updaters = []
 
-      if (peerName) {
-        const peer = peers[peerName]
-        return tag
-          .replace(Patterns.SRI, isMin ? peer.sri.bundleMin : peer.sri.bundle)
-          .replace(Patterns.VERSION, `@${peer.version}/`)
+      if (oldHash !== newHash) {
+        updaters.push((tagString) => tagString.replace(Patterns.SRI, newHash))
       }
 
-      // Otherwise, update the element CDN
-
-      let updaters = []
-
-      if (![pkg.sri.bundleMin, pkg.sri.bundle].includes(oldHash)) {
-        updaters.push((tagString) => tagString.replace(oldHash, nextHash))
-      }
-
-      if (pkg.version !== oldVersion) {
+      if (oldVersion !== newVersion) {
         updaters.push((tagString) =>
-          tagString.replace(oldVersion, `@${pkg.version}/`)
+          tagString.replace(Patterns.VERSION, newVersion)
         )
       }
 
@@ -76,80 +76,13 @@ for (let name in targeted) {
     })
 
     let nextFileContent = fileContent
-    fileScriptTags.forEach((oldTag, i) => {
+    detectedScriptTags.forEach((oldTag, i) => {
       if (nextScriptTags[i] === oldTag) return
       nextFileContent = nextFileContent.replace(oldTag, nextScriptTags[i])
     })
 
-    writeFileContent(pkg.root, target, nextFileContent)
+    writeFileContent(target, nextFileContent)
   })
 }
-
-// packages.forEach((pkg) => {
-//   logger.step(`\nUpdating package files for: ${pkg.name}`)
-
-//   Object.keys(pkg.targets).forEach((fileKey) => {
-//     const fileTarget = Files[fileKey]
-//     const filePath = `${pkg.root}/${fileTarget}`
-
-//     if (fs.existsSync(filePath) !== false) {
-//       logger.step(`--> Updating ${filePath}`)
-
-//       const fileContent = getFileContent(pkg.root, fileTarget)
-//       const fileScriptTags = fileContent
-//         .match(Patterns.SCRIPT)
-//         .filter((tag) => tag.includes("cdn.jsdelivr.net"))
-
-//       const nextScriptTags = fileScriptTags.map((tag) => {
-//         const isMin = tag.includes(".min.js")
-//         const oldHash = tag.match(Patterns.SRI)[0]
-//         const nextHash = isMin ? pkg.sri.bundleMin : pkg.sri.bundle
-//         const oldVersion = tag.match(Patterns.VERSION)[0]
-//         const possiblePeer = Object.keys(peers).filter((peerName) =>
-//           tag.includes(peerName)
-//         )
-//         const peerName = possiblePeer.length ? possiblePeer[0] : null
-
-//         // If known peers were encountered, update them
-
-//         if (peerName) {
-//           const peer = peers[peerName]
-//           return tag
-//             .replace(Patterns.SRI, isMin ? peer.sri.bundleMin : peer.sri.bundle)
-//             .replace(Patterns.VERSION, `@${peer.version}/`)
-//         }
-
-//         // Otherwise, update the element CDN
-
-//         let updaters = []
-
-//         if (![pkg.sri.bundleMin, pkg.sri.bundle].includes(oldHash)) {
-//           updaters.push((tagString) => tagString.replace(oldHash, nextHash))
-//         }
-
-//         if (pkg.version !== oldVersion) {
-//           updaters.push((tagString) =>
-//             tagString.replace(oldVersion, `@${pkg.version}/`)
-//           )
-//         }
-
-//         return updaters.reduce(
-//           (updatedTag, updater) => (updatedTag = updater(updatedTag)),
-//           tag
-//         )
-//       })
-
-//       let nextFileContent = fileContent
-//       fileScriptTags.forEach((oldTag, i) => {
-//         if (nextScriptTags[i] === oldTag) return
-//         nextFileContent = nextFileContent.replace(oldTag, nextScriptTags[i])
-//       })
-
-//       writeFileContent(pkg.root, fileTarget, nextFileContent)
-//     } else {
-//       logger.step(`--> File not found: ${filePath}. Skipping.`)
-//     }
-//   }) // end Object.keys
-// }) // end packages.forEach
 
 logger.finish("CDN tags updated ✨")

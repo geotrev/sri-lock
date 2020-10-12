@@ -4,22 +4,20 @@
 
 const tag = "✩ [Paopu]"
 
-export function begin(msg = "") {
-  if (!msg) return
-  console.info(tag)
-  console.info(msg)
+export function begin(...msg) {
+  if (!msg || !msg.length) return
+  console.info(tag, ...msg)
 }
 
 export function err(msg, type = "error") {
-  console[type](msg)
+  console[type](tag, msg)
 }
 
 export function print(...msg) {
-  console.info(...msg)
+  console.info(tag, ...msg)
 }
 
 export function finish(msg = "") {
   if (!msg) return
-  console.info(msg)
-  console.info(tag)
+  console.info(tag, msg)
 }

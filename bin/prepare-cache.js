@@ -48,7 +48,7 @@ for (let packageName in paopuConfig) {
     continue
   }
 
-  const nextVersion = getJSON(pkgJson).version
+  const nextVersion = getJSON(getFileContent(pkgJson)).version
 
   if (nextVersion !== nextCache[packageName].version) {
     nextCache[packageName].version = nextVersion

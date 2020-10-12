@@ -8,7 +8,11 @@
   },
   "upgraded-element": {
     "resources": ["dist/upgraded-element.js", "dist/upgraded-element.min.js"],
-    "targets": ["test/upgraded-element/doc.md"]
+    "targets": [
+      "test/upgraded-element/doc.md",
+      "test/tooltip/doc.md",
+      "test/doc.md"
+    ]
   },
   "@spider-ui/tooltip": {
     "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],

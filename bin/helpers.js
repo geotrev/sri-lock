@@ -14,7 +14,7 @@ export const getFileContent = (target) => {
   return fs.readFileSync(targetPath, FILE_FORMAT)
 }
 
-export const getJSON = (target) => JSON.parse(getFileContent(target))
+export const getJSON = (target) => JSON.parse(target)
 
 export const writeFileContent = (target, content) => {
   return fs.writeFileSync(
@@ -79,7 +79,7 @@ export const getConfig = (customConfig) => {
     process.exit()
   }
 
-  return getJSON(RESOLVED_CONFIG_NAME)
+  return getJSON(getFileContent(RESOLVED_CONFIG_NAME))
 }
 
 export const getCache = () => {

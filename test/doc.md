@@ -1,14 +1,14 @@
 ```html
 <script
   type="text/javascript"
-  src="https://unpkg.com/npm/helper@0.1.0/dist/helper.js"
-  integrity="sha256-4eCeGYBbcfBB/bLzVuDg8NFDE53W1Do+J7TWsGStx2M="
+  src="https://unpkg.com/npm/helper@0.2.0/dist/helper.js"
+  integrity="sha256-KiieWXwXUl+gmE53PcbEQvl6XG6hgdsji+EXLIpROl0="
   crossorigin="anonymous"
 ></script>
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.0/dist/upgraded-element.min.js"
-  integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.3/dist/upgraded-element.min.js"
+  integrity="sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
   crossorigin="anonymous"
 ></script>
 ```
