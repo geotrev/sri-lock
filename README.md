@@ -72,7 +72,7 @@ Some things of note:
 - A `version` will be derived from your project's `package.json`. If your tag's `src` attribute has no version, it isn't used.
 - A base64 hash will be derived from each file in `resources`. If your tag doesn't have an `integrity` attribute, nothing happens.
 
-See [CLI options](#cli-options) for customization options.
+See the [config](#config-options) and [cli](#cli-options) breakdown for customization options.
 
 ### Monorepos
 
