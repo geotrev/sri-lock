@@ -83,13 +83,13 @@ One way is to add just one config file at the monorepo root, like this:
 ```json
 {
   "package-1": {
-    "resourceBasePath": "packages/package-1",'
+    "resourceBasePath": "packages/package-1",
     "targetBasePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
   },
   "package-2": {
-    "resourceBasePath": "packages/package-2",'
+    "resourceBasePath": "packages/package-2",
     "targetBasePath": "packages/package-2",
     "resources": ["dist/bundle.min.js", "dist/bundle.js"],
     "targets": ["README.md", "test/index.html"]
