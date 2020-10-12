@@ -1,6 +1,6 @@
-# Paopu
+# ✩ Paopu ✩
 
-A CLI tool to manage your CDN script tags in files. Tell it which files to update, which to generate hashes from, then let Paopu handle the rest.
+A CLI tool to manage your CDN script tags in files. Tell it which files to update, which to generate hashes from, then let Paopu handle the rest. Currently only `SHA256` is supported, but there will be more Soon™.
 
 Read the [Why](#why) section for more details.
 
@@ -38,7 +38,7 @@ $ paopu
 
 Maybe you also include this in an HTML file in your repository so you can easily test that the integrity is correct and your resource is secure. Neat.
 
-**Problem:** You release a new version and need to update the script tag. You need to do it manually or with some janky node script though, obviously.
+**Problem:** You release a new version and need to update the script tag. You need to do it manually or with some janky node script, obviously.
 
 Not only that, you have the tags in multiple files. Maybe you can get away with copy/pasting.
 
