@@ -59,12 +59,12 @@ Create a `paopu.config.json` at the root of your project. Then create a simple c
 {
   // Each entry uses a package name as the key
   "package-name": {
-    // Specifies CDN files
+    // Specifies CDN resources used in your script tags.
     //
     // Required
     "resources": ["some/path/bundle-name.min.js", "some-path/bundle-name.js"],
     
-    // Specifies which files have CDN script tags
+    // Specifies which files have the script tags.
     //
     // Required
     "targets": ["README.md", "test/index.html"],
@@ -76,13 +76,13 @@ Create a `paopu.config.json` at the root of your project. Then create a simple c
     // Optional
     "module": false,
     
-    // Specifies a custom base path for paths in `resources`
+    // Specifies a common base path for paths in `resources`
     // Should resolve to a package root in all cases.
     //
     // Optional
     "resourceBasePath": undefined,
     
-    // Specifies a common path used by all your targets
+    // Specifies a common base path for paths in `targets`
     //
     // Optional
     "targetBasePath": undefined,
