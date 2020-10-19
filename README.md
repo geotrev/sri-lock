@@ -34,7 +34,7 @@ $ paopu
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/my-cool-package@0.3.2/dist/my-cool-package.min.js"
+  src="https://cdn.jsdelivr.net/npm/my-package@0.3.2/dist/my-cool-package.min.js"
   integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
   crossorigin="anonymous"
 ></script>
@@ -52,44 +52,48 @@ Kind of annoying, right?
 
 ## Create a config
 
-Create a `paopu.config.json` at the root of your project. Then create a simple configuration describing your package. We'll use the example tag from above:
+Create a `paopu.config.json` at the root of your project. Optional properties below have default values displayed.
 
 ```
 // paopu.config.json
 {
   // Each entry uses a package name as the key
   "package-name": {
-    // Specifies CDN resources used in your script tags.
+    // Specifies file resources used in your script tags. These paths should
+    // partially match your path in the `src` attribute.
     //
-    // Required
+    // REQUIRED
     "resources": ["some/path/bundle-name.min.js", "some-path/bundle-name.js"],
-    
+
     // Specifies which files have the script tags.
     //
-    // Required
+    // REQUIRED
     "targets": ["README.md", "test/index.html"],
-    
+
     // Specifies if the resources are located in a modules folder.
     // Automatically prepends `node_modules/package-name` to your
     // paths defined in `resources`
+    // This also causes the tool to ignore `resourceBasePath`
     //
-    // Optional
+    // OPTIONAL
     "module": false,
-    
+
     // Specifies a common base path for paths in `resources`
     // Should resolve to a package root in all cases.
+    // This is ignored if `module` is `true`.
     //
-    // Optional
+    // OPTIONAL
     "resourceBasePath": undefined,
-    
+
     // Specifies a common base path for paths in `targets`
     //
-    // Optional
+    // OPTIONAL
     "targetBasePath": undefined,
-    
-    // A pattern used to resolve which script tags to update
+
+    // A pattern used to resolve which script tags to update.
+    // E.g., 'unpkg.com'
     //
-    // Optional
+    // OPTIONAL
     "urlPattern": 'cdn.jsdelivr.net'
   }
 }
