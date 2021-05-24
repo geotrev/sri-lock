@@ -1,10 +1,10 @@
 # ✩ Paopu ✩
 
-A CLI tool to manage your CDN script tags in files. Tell it which files to update, which to generate SRI hashes from, then let Paopu handle the rest.
+A CLI tool to manage your CDN script tags in files. Automatically generate a sub-resource integrity from a file, then add it to the matching script tag.
 
 Read the [Why](#why) section for more details.
 
-Paopu currently only works with Node 14, but will support 10+ in the future.
+Paopu was created to work with Node 14.
 
 Feel free to submit an issue or pull request. :)
 
