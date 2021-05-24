@@ -109,7 +109,7 @@ Flags: `--config`, `-c`
 
 Default: `paopu.config.json`
 
-Example usage: `paopu -c my-custom-file.json`
+Example usage: `paopu -c path/to/paopu.config.json`
 
 Override the default configuration filename.
 
