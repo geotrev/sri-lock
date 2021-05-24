@@ -40,15 +40,9 @@ $ paopu
 ></script>
 ```
 
-Maybe you also include this in an HTML file in your repository so you can easily test that the integrity is correct and your resource is secure. Neat.
+**Problem:** Every time you release a new package version, you need to update that integrity hash. Sometimes in multiple files.
 
-**Problem:** You release a new version and need to update the script tag. You need to do it manually or with some janky node script, obviously.
-
-Not only that, you have the tags in multiple files. Maybe you can get away with copy/pasting.
-
-Kind of annoying, right?
-
-**Solution:** Install Paopu, add a config, then run the CLI tool. Done. 💪
+**Solution:** Install Paopu, add a config, then run the CLI tool. Done. ✨
 
 ## Create a config
 
