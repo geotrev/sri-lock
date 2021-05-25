@@ -53,24 +53,28 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
 {
   // Each entry uses a package name as the key
   "package-name": {
-    // Specifies file resources used in your script tags. These paths should
+  
+    // Specifies the file paths used in your script tags. These paths must
     // partially match your path in the `src` attribute.
     //
     // REQUIRED
+    
     "resources": ["some/path/bundle-name.min.js", "some-path/bundle-name.js"],
 
-    // Specifies which files have the script tags.
+    // Specifies which files to search for script tags in.
     //
     // REQUIRED
+    
     "targets": ["README.md", "test/index.html"],
 
     // Specifies if the resources are located in a modules folder.
-    // Automatically prepends `node_modules/package-name` to paths
-    // defined in `resources`, where `package-name` is the key
-    // of your paopu config object.
+    // Automatically prepends `node_modules/<CONFIG_KEY>` to paths
+    // defined in `resources`, where `<CONFIG_KEY>` is the key
+    // of the given paopu config entry.
     // This also causes the tool to ignore `resourceBasePath`
     //
     // OPTIONAL
+    
     "module": false,
 
     // Specifies a common base path for paths in `resources`
@@ -78,17 +82,22 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
     // This is ignored if `module` is `true`.
     //
     // OPTIONAL
-    "resourceBasePath": undefined,
+    
+    "resourceBasePath": ".",
 
     // Specifies a common base path for paths in `targets`
     //
     // OPTIONAL
-    "targetBasePath": undefined,
+    
+    "targetBasePath": ".",
 
-    // A pattern used to resolve which script tags to update.
+    // A url matcher for your script tag. If its `src` contains
+    // this pattern AND the matching resource path, then the 
+    // script tag will be updated.
     // E.g., 'unpkg.com'
     //
     // OPTIONAL
+    
     "urlPattern": 'cdn.jsdelivr.net'
   }
 }
