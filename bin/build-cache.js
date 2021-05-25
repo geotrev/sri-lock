@@ -32,7 +32,7 @@ export function buildCache() {
     newCache[packageName] = normalizedCache
 
     const root = normalizedCache.module
-      ? `node_modules/${normalizedCache.resourceBasePath}`
+      ? `node_modules/${packageName}`
       : normalizedCache.resourceBasePath
 
     // Update version
