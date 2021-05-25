@@ -65,8 +65,9 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
     "targets": ["README.md", "test/index.html"],
 
     // Specifies if the resources are located in a modules folder.
-    // Automatically prepends `node_modules/package-name` to your
-    // paths defined in `resources`
+    // Automatically prepends `node_modules/package-name` to paths
+    // defined in `resources`, where `package-name` is the key
+    // of your paopu config object.
     // This also causes the tool to ignore `resourceBasePath`
     //
     // OPTIONAL
