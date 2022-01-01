@@ -8,23 +8,24 @@
     "paopu": "bin/index.js"
   },
   "scripts": {
-    "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore"
+    "test": "paopu",
+    "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
+    "git:update-origin": "git add . && git commit -m '[npm publish] new version ✨' && git push && git push --tags",
+    "prepublishOnly": "npm run git:update-origin"
   },
   "dependencies": {
     "jshashes": "^1.0.8",
-    "yargs": "^16.0.3"
+    "yargs": "^17.3.1"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^9.0.0",
-    "@spider-ui/global-event-registry": "^0.2.5",
-    "@spider-ui/tooltip": "^0.2.5",
+    "@rollup/plugin-node-resolve": "^13.1.2",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.7.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-jest": "^24.0.2",
-    "prettier": "^2.0.5",
-    "rollup": "^2.26.4",
-    "upgraded-element": "^0.4.3"
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^25.3.3",
+    "prettier": "^2.5.1",
+    "rollup": "^2.62.0",
+    "rotom": "^0.8.0"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,11 @@
     "documentation",
     "cdn",
     "sri",
-    "sub-resource integrity"
+    "sub-resource integrity",
+    "html",
+    "web development",
+    "node",
+    "npm"
   ],
   "directories": {
     "bin": "bin"
@@ -47,7 +52,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "George Treviranus <hellO@geotrev.com>",
+  "author": "George Treviranus <geowtrev@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/geotrev/paopu/issues"

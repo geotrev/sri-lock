@@ -5,7 +5,7 @@ import { writeFileContent, CACHE_FILE_NAME } from "./helpers.js"
 import { buildCache } from "./build-cache.js"
 
 logger.empty()
-logger.begin("Verifying config")
+logger.begin("⏳ Verifying config")
 
 const nextCache = buildCache()
 const cacheToString = JSON.stringify(nextCache, null, 2)

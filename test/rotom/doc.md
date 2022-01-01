@@ -1,8 +1,13 @@
 ```html
+<!-- decoy link -->
+<script
+  crossorigin
+  src="https://unpkg.com/react@16/umd/react.development.js"
+></script>
 <script
   type="text/javascript"
-  src="https://unpkg.com/npm/helper@0.3.0/dist/helper.js"
-  integrity="sha256-KiieWXwXUl+gmE53PcbEQvl6XG6hgdsji+EXLIpROl0="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.8.0/dist/rotom.template.js"
+  integrity="sha256-bTESWLEO7RugFyx49taqcqsLKSAcseG9fbsMC8Ue/5k="
   crossorigin="anonymous"
 ></script>
 <script

@@ -1,9 +1,9 @@
 import path from "path"
-import resolve from "@rollup/plugin-node-resolve"
+import { nodeResolve } from "@rollup/plugin-node-resolve"
 
 const input = path.resolve(__dirname, "src/index.js")
 
-const plugins = [resolve()]
+const plugins = [nodeResolve()]
 
 const output = {
   format: "es",
