@@ -1,6 +1,6 @@
 {
   "name": "paopu",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "bin/index.js",
   "type": "module",
@@ -11,7 +11,7 @@
     "test": "paopu",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
     "git:update-origin": "git add . && git commit -m '[npm publish] new version ✨' && git push && git push --tags",
-    "prepublishOnly": "npm run git:update-origin"
+    "postversion": "npm run git:update-origin"
   },
   "dependencies": {
     "jshashes": "^1.0.8",
