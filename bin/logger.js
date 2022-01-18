@@ -1,27 +1,13 @@
 #!/usr/bin/env node
 
+import ora from "ora"
+
 /* eslint-disable no-console */
 
-const tag = "✩ [Paopu]"
+const tag = "✩ [paopu]"
 
-export function begin(...msg) {
-  if (!msg || !msg.length) return
-  console.info(tag, ...msg)
+export function message(info) {
+  return tag + " " + info
 }
 
-export function err(msg, type = "error") {
-  console[type](tag, "error:", msg)
-}
-
-export function print(...msg) {
-  console.info(tag, ...msg)
-}
-
-export function finish(msg = "") {
-  if (!msg) return
-  console.info(tag, msg)
-}
-
-export function empty() {
-  console.log("")
-}
+export const reporter = ora().start()

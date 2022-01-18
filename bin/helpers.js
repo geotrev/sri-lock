@@ -2,7 +2,7 @@
 
 import path from "path"
 import fs from "fs"
-import * as logger from "./logger.js"
+import { reporter, message } from "./logger.js"
 
 const CONFIG_FILE_NAME = "paopu.config.json"
 const FILE_FORMAT = "utf-8"
@@ -35,22 +35,27 @@ export function isValidCacheEntry(name, packageConfig = {}) {
   let isValid = true
 
   if (module && resourceBasePath) {
-    logger.err(
-      `Config for '${name}' is a module, so 'resourceBasePath' will be ignored`,
-      "warn"
+    reporter.warn(
+      message(
+        `Config for '${name}' is a module, so 'resourceBasePath' will be ignored`
+      )
     )
   }
 
   if (!Array.isArray(resources) || !resources.length) {
-    logger.err(
-      `Config for '${name}' must use the format 'resources: [<string>, <string>, ...]', skipping`
+    reporter.warn(
+      message(
+        `Config for '${name}' must use the format 'resources: [<string>, <string>, ...]', skipping`
+      )
     )
     isValid = false
   }
 
   if (!Array.isArray(targets) || !targets.length) {
-    logger.err(
-      `Config for '${name}' must use the format 'targets: [<string>, <string>, ...]', skipping`
+    reporter.warn(
+      message(
+        `Config for '${name}' must use the format 'targets: [<string>, <string>, ...]', skipping`
+      )
     )
     isValid = false
   }
@@ -75,8 +80,8 @@ export function getConfig(customConfig) {
   let RESOLVED_CONFIG_NAME = customConfig || CONFIG_FILE_NAME
 
   if (!exists(RESOLVED_CONFIG_NAME)) {
-    logger.finish(
-      `Couldn't resolve config file: ${RESOLVED_CONFIG_NAME}, exiting`
+    reporter.fail(
+      message(`Couldn't resolve config file: ${RESOLVED_CONFIG_NAME}, exiting`)
     )
     process.exit()
   }

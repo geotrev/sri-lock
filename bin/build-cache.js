@@ -11,7 +11,7 @@ import {
   getConfig,
   isValidCacheEntry,
 } from "./helpers.js"
-import * as logger from "./logger.js"
+import { reporter, message } from "./logger.js"
 
 export function buildCache() {
   const cliArgs = getArgs()
@@ -39,8 +39,10 @@ export function buildCache() {
 
     const pkgJson = `${root}/package.json`
     if (!exists(pkgJson)) {
-      logger.err(
-        `Package '${packageName}' has unresolvable package.json, skipping`
+      reporter.warn(
+        message(
+          `Package '${packageName}' has unresolvable package.json, skipping`
+        )
       )
       continue
     }
@@ -61,7 +63,9 @@ export function buildCache() {
       const resourcePath = path.resolve(process.cwd(), root, resource)
 
       if (!exists(resourcePath)) {
-        logger.err(`Resource at '${resourcePath}' is unresolvable, skipping`)
+        reporter.warn(
+          message(`Resource at '${resourcePath}' is unresolvable, skipping`)
+        )
         continue
       }
 

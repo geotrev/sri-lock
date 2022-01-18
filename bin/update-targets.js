@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as logger from "./logger.js"
+import { reporter, message } from "./logger.js"
 import { getArgs } from "./parse-args.js"
 import { clearCache, getCache, getJSON } from "./helpers.js"
 import { writeToTarget } from "./write-to-target.js"
@@ -8,7 +8,7 @@ import { writeToTarget } from "./write-to-target.js"
 const paopuCache = getJSON(getCache())
 
 const packageNames = Object.keys(paopuCache)
-logger.begin("⌛ Updating CDN tags for packages:", packageNames)
+reporter.info(message(`Updating CDN tags for packages: ${packageNames}`))
 
 // Update targets
 
@@ -25,5 +25,4 @@ if (!cliArgs.debug && !cliArgs.d) {
   clearCache()
 }
 
-logger.finish("✅ CDN tags updated")
-logger.empty()
+reporter.succeed(message("Done! ✨"))

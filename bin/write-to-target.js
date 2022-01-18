@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as logger from "./logger.js"
+import { reporter, message } from "./logger.js"
 import { getFileContent, writeFileContent, exists } from "./helpers.js"
 
 const Patterns = {
@@ -11,7 +11,9 @@ const Patterns = {
 
 export function writeToTarget(target, name, packageConfig) {
   if (!exists(target)) {
-    logger.print(`Package '${name}' has unresolvable target: '${target}'`)
+    reporter.warn(
+      message(`Package '${name}' has unresolvable target: '${target}'`)
+    )
     return
   }
 
