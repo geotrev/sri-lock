@@ -4,7 +4,7 @@ A CLI tool to manage your CDN script tags in files. Automatically generate a sub
 
 Read the [Why](#why) section for more details.
 
-Paopu was created to work with Node 14.
+Paopu was created to work with Node 14 and newer.
 
 Feel free to submit an issue or pull request. :)
 
@@ -53,18 +53,18 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
 {
   // Each entry uses a package name as the key
   "package-name": {
-  
+
     // Specifies the file paths used in your script tags. These paths must
     // partially match your path in the `src` attribute.
     //
     // REQUIRED
-    
+
     "resources": ["some/path/bundle-name.min.js", "some-path/bundle-name.js"],
 
     // Specifies which files to search for script tags in.
     //
     // REQUIRED
-    
+
     "targets": ["README.md", "test/index.html"],
 
     // Specifies if the resources are located in a modules folder.
@@ -74,7 +74,7 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
     // This also causes the tool to ignore `resourceBasePath`
     //
     // OPTIONAL
-    
+
     "module": false,
 
     // Specifies a common base path for paths in `resources`
@@ -82,22 +82,22 @@ Create a `paopu.config.json` at the root of your project. Optional properties be
     // This is ignored if `module` is `true`.
     //
     // OPTIONAL
-    
+
     "resourceBasePath": ".",
 
     // Specifies a common base path for paths in `targets`
     //
     // OPTIONAL
-    
+
     "targetBasePath": ".",
 
     // A url matcher for your script tag. If its `src` contains
-    // this pattern AND the matching resource path, then the 
+    // this pattern AND the matching resource path, then the
     // script tag will be updated.
     // E.g., 'unpkg.com'
     //
     // OPTIONAL
-    
+
     "urlPattern": 'cdn.jsdelivr.net'
   }
 }
