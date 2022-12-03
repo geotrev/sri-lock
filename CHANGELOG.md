@@ -1,3 +1,7 @@
+
+
+## [0.1.1](https://github.com/geotrev/paopu/compare/v0.1.0...v0.1.1) (2022-12-03)
+
 # [0.1.0](https://github.com/geotrev/paopu/compare/v0.0.6...v0.1.0) (2022-01-18)
 
 
@@ -29,4 +33,3 @@
 
 
 ## [0.0.2](https://github.com/geotrev/paopu/compare/v0.0.6...v0.1.0) (2020-10-12)
-
