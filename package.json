@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "test": "paopu",
+    "test": "node bin/index.js",
     "eslint:check": "eslint -c .eslintrc.json",
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
@@ -17,23 +17,22 @@
   },
   "dependencies": {
     "jshashes": "^1.0.8",
-    "ora": "^6.1.2",
-    "yargs": "^17.6.2"
+    "ora": "^6.3.0",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@babel/eslint-parser": "^7.21.3",
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
     "@release-it/conventional-changelog": "^5.1.1",
-    "babel-eslint": "^10.1.0",
-    "dotenv-cli": "^6.0.0",
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jest": "^27.1.6",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.0.4",
-    "prettier": "^2.8.0",
-    "release-it": "^15.5.1",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7",
+    "release-it": "^15.10.1",
     "rotom": "^0.12.0"
   },
   "repository": {
