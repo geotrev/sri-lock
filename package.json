@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "jshashes": "^1.0.8",
-    "ora": "^6.3.0",
+    "ora": "^7.0.0",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
